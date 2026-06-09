@@ -52,11 +52,5 @@
     <Compile Include="Models\TinyCellQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="images\logo.svg" />
-    <Content Include="images\polygon-structure.svg" />
-    <Content Include="images\water1.svg" />
-    <Content Include="images\water2.svg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

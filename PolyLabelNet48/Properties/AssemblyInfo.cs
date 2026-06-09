@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PolyLabelNet48")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A .NET Framework 4.8 port of PolylabelNet (itself a C# port of Mapbox Polylabel). Finds the pole of inaccessibility — the optimal point inside a polygon for label placement.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PolyLabelNet48")]
