@@ -34,10 +34,17 @@ See [Changes From Upstream](#changes-from-upstream) for the exact modifications.
 
 ## Installation
 
-This library is not published to NuGet. Consume it from source:
+Install the library directly from [NuGet](https://www.nuget.org/):
 
-* **Project reference:** add `PolyLabelNet48.csproj` to your solution and reference it from your project, **or**
-* **Assembly reference:** build the project and reference the produced `PolyLabelNet48.dll`.
+```bash
+dotnet add package PolylabelNet48
+```
+
+Or via the Package Manager Console:
+
+```powershell
+Install-Package PolylabelNet48 
+```
 
 ## Namespaces
 
@@ -102,6 +109,13 @@ Console.WriteLine($"Distance to closest boundary: {distance}");         // Outpu
 
 `Polylabel.Run` returns a `PolylabelResult`, which deconstructs into `(Point point, double distance)`
 as shown, or can be used directly via its `Point` and `Distance` properties.
+
+## From Mapbox Documentation
+Given polygon coordinates in GeoJSON-like format (an array of arrays of [x, y] points) and precision (1.0 by default), Polylabel returns the pole of inaccessibility coordinate in [x, y] format. The distance to the closest polygon point (in input units) is included as a distance property.
+
+const p = polylabel([[[0, 0], [1, 0], ...]], 1.0);
+const distance = p.distance;
+Be careful to pick precision appropriate for the input units. E.g. in case of geographic coordinates (longitude and latitude), `0.000001` is appropriate, while the default `(1.0)` would be too imprecise.
 
 ### Interoperability
 
