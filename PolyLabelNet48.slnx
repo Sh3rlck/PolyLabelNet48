@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PolyLabelNet48/PolyLabelNet48.csproj" Id="3ea71d08-6b90-40d2-b570-d80b3cd8e5cb" />
+  <Project Path="PolyLabelNet48.Tests/PolyLabelNet48.Tests.csproj" />
+</Solution>
