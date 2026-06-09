@@ -2,7 +2,7 @@
   <img src="images/logo.svg" width="150" alt="PolyLabelNet48 Logo">
 </p>
 
-<h1 align="center">PolyLabelNet48</h1>
+<h1 align="center">PolylabelNet48</h1>
 
 <p align="center">
   A <b>.NET Framework 4.8</b> port of <a href="https://github.com/oberbichler/PolylabelNet">PolylabelNet</a>
