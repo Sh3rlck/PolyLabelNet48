@@ -9,17 +9,17 @@ namespace PolyLabelNet48.Models
         public Point Point { get; }
 
         /// <summary>The distance from the pole to the nearest polygon edge.</summary>
-        public double Distance { get; }
+        public float Distance { get; }
 
         /// <summary>Creates a new result from the specified point and distance.</summary>
-        public PolylabelResult(Point point, double distance)
+        public PolylabelResult(Point point, float distance)
         {
             Point = point;
             Distance = distance;
         }
 
         /// <summary>Deconstructs the result into its point and distance components.</summary>
-        public void Deconstruct(out Point point, out double distance)
+        public void Deconstruct(out Point point, out float distance)
         {
             point = Point;
             distance = Distance;

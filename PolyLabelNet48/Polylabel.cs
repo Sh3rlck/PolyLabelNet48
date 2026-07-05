@@ -21,7 +21,7 @@ namespace PolyLabelNet48
         /// <param name="debug">Whether to write debug probe information to the Console (default is false).</param>
         /// <returns>A PolylabelResult containing the found pole and its distance to the outline.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PolylabelResult Run(Polygon polygon, double precision = 1.0, bool debug = false)
+        public static PolylabelResult Run(Polygon polygon, float precision = 1.0f, bool debug = false)
         {
             return Run<Polygon, Point>(polygon, precision, debug);
         }
@@ -36,7 +36,7 @@ namespace PolyLabelNet48
         /// <param name="debug">Whether to write debug probe information to the Console (default is false).</param>
         /// <returns>A PolylabelResult containing the found pole and its distance to the outline.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static PolylabelResult Run<TPoint>(Polygon<TPoint> polygon, double precision = 1.0, bool debug = false)
+        public static PolylabelResult Run<TPoint>(Polygon<TPoint> polygon, float precision = 1.0f, bool debug = false)
             where TPoint : struct, IPoint
         {
             return Run<Polygon<TPoint>, TPoint>(polygon, precision, debug);
@@ -52,7 +52,7 @@ namespace PolyLabelNet48
         /// <param name="precision">The search precision (default is 1.0).</param>
         /// <param name="debug">Whether to write debug probe information to the Console (default is false).</param>
         /// <returns>A PolylabelResult containing the found pole and its distance to the outline.</returns>
-        public static PolylabelResult Run<TPolygon, TPoint>(TPolygon polygon, double precision = 1.0, bool debug = false)
+        public static PolylabelResult Run<TPolygon, TPoint>(TPolygon polygon, float precision = 1.0f, bool debug = false)
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
         {
@@ -60,7 +60,7 @@ namespace PolyLabelNet48
         }
 
         internal static PolylabelResult RunCore<TPolygon, TPoint, TCellQueue>(
-            TPolygon polygon, TCellQueue cellQueue, double precision, bool debug)
+            TPolygon polygon, TCellQueue cellQueue, float precision, bool debug)
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
             where TCellQueue : ICellQueue
@@ -78,10 +78,10 @@ namespace PolyLabelNet48
             }
 
             // 1. Find the bounding box of the outer ring
-            double minX = double.PositiveInfinity;
-            double minY = double.PositiveInfinity;
-            double maxX = double.NegativeInfinity;
-            double maxY = double.NegativeInfinity;
+            float minX = float.PositiveInfinity;
+            float minY = float.PositiveInfinity;
+            float maxX = float.NegativeInfinity;
+            float maxY = float.NegativeInfinity;
 
             for (int i = 0; i < outerRing.Length; i++)
             {
@@ -92,9 +92,9 @@ namespace PolyLabelNet48
                 if (p.Y > maxY) maxY = p.Y;
             }
 
-            double width = maxX - minX;
-            double height = maxY - minY;
-            double cellSize = Math.Max(precision, Math.Min(width, height));
+            float width = maxX - minX;
+            float height = maxY - minY;
+            float cellSize = MathF.Max(precision, MathF.Min(width, height));
 
             if (cellSize == precision)
             {
@@ -105,7 +105,7 @@ namespace PolyLabelNet48
             Cell bestCell = GetCentroidCell<TPolygon, TPoint>(polygon);
 
             // 3. Second guess: bounding box centroid
-            Cell bboxCell = CreateCell<TPolygon, TPoint>(minX + width / 2.0, minY + height / 2.0, 0, polygon);
+            Cell bboxCell = CreateCell<TPolygon, TPoint>(minX + width / 2.0f, minY + height / 2.0f, 0, polygon);
             if (bboxCell.D > bestCell.D)
             {
                 bestCell = bboxCell;
@@ -114,10 +114,10 @@ namespace PolyLabelNet48
             int numProbes = 2;
 
             // 4. Cover polygon with initial cells
-            double initialH = cellSize / 2.0;
-            for (double x = minX; x < maxX; x += cellSize)
+            float initialH = cellSize / 2.0f;
+            for (float x = minX; x < maxX; x += cellSize)
             {
-                for (double y = minY; y < maxY; y += cellSize)
+                for (float y = minY; y < maxY; y += cellSize)
                 {
                     PotentiallyQueue<TPolygon, TPoint, TCellQueue>(x + initialH, y + initialH, initialH, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
                 }
@@ -135,7 +135,7 @@ namespace PolyLabelNet48
                 }
 
                 // Split the cell into four child cells
-                double h = cell.H / 2.0;
+                float h = cell.H / 2.0f;
                 PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
                 PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X + h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
                 PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y + h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
@@ -152,12 +152,12 @@ namespace PolyLabelNet48
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PotentiallyQueue<TPolygon, TPoint, TCellQueue>(
-            double x, double y, double h,
+            float x, float y, float h,
             TPolygon polygon,
             ref int numProbes,
             ref Cell bestCell,
             TCellQueue cellQueue,
-            double precision,
+            float precision,
             bool debug)
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
@@ -175,17 +175,17 @@ namespace PolyLabelNet48
                 bestCell = cell;
                 if (debug)
                 {
-                    Console.WriteLine($"found best {Math.Round(1e4 * cell.D) / 1e4} after {numProbes} probes");
+                    Console.WriteLine($"found best {MathF.Round(1e4f * cell.D) / 1e4} after {numProbes} probes");
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Cell CreateCell<TPolygon, TPoint>(double x, double y, double h, TPolygon polygon)
+        private static Cell CreateCell<TPolygon, TPoint>(float x, float y, float h, TPolygon polygon)
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
         {
-            double d = PointToPolygonDist<TPolygon, TPoint>(x, y, polygon);
+            float d = PointToPolygonDist<TPolygon, TPoint>(x, y, polygon);
             return new Cell(x, y, h, d);
         }
 
@@ -194,9 +194,9 @@ namespace PolyLabelNet48
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
         {
-            double area = 0;
-            double x = 0;
-            double y = 0;
+            float area = 0;
+            float x = 0;
+            float y = 0;
             TPoint[] points = polygon.GetRing(0);
             int len = points.Length;
             if (len == 0) return new Cell(0, 0, 0, 0);
@@ -205,10 +205,10 @@ namespace PolyLabelNet48
             for (int i = 0; i < len; i++)
             {
                 TPoint a = points[i];
-                double f = a.X * b.Y - b.X * a.Y;
+                float f = a.X * b.Y - b.X * a.Y;
                 x += (a.X + b.X) * f;
                 y += (a.Y + b.Y) * f;
-                area += f * 3.0;
+                area += f * 3.0f;
                 b = a;
             }
 
@@ -218,8 +218,8 @@ namespace PolyLabelNet48
                 return CreateCell<TPolygon, TPoint>(first.X, first.Y, 0, polygon);
             }
 
-            double cx = x / area;
-            double cy = y / area;
+            float cx = x / area;
+            float cy = y / area;
             Cell centroid = CreateCell<TPolygon, TPoint>(cx, cy, 0, polygon);
             if (centroid.D < 0)
             {
@@ -231,12 +231,12 @@ namespace PolyLabelNet48
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double PointToPolygonDist<TPolygon, TPoint>(double x, double y, TPolygon polygon)
+        private static float PointToPolygonDist<TPolygon, TPoint>(float x, float y, TPolygon polygon)
             where TPolygon : struct, IPolygon<TPoint>
             where TPoint : struct, IPoint
         {
             bool inside = false;
-            double minDistSq = double.PositiveInfinity;
+            float minDistSq = float.PositiveInfinity;
 
             int ringCount = polygon.RingCount;
             for (int r = 0; r < ringCount; r++)
@@ -256,7 +256,7 @@ namespace PolyLabelNet48
                         inside = !inside;
                     }
 
-                    double distSq = GetSegDistSq(x, y, a, b);
+                    float distSq = GetSegDistSq(x, y, a, b);
                     if (distSq < minDistSq)
                     {
                         minDistSq = distSq;
@@ -266,21 +266,21 @@ namespace PolyLabelNet48
                 }
             }
 
-            return minDistSq == 0 ? 0 : (inside ? 1 : -1) * Math.Sqrt(minDistSq);
+            return minDistSq == 0 ? 0 : (inside ? 1 : -1) * MathF.Sqrt(minDistSq);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double GetSegDistSq<TPoint>(double px, double py, in TPoint a, in TPoint b)
+        private static float GetSegDistSq<TPoint>(float px, float py, in TPoint a, in TPoint b)
             where TPoint : struct, IPoint
         {
-            double x = a.X;
-            double y = a.Y;
-            double dx = b.X - x;
-            double dy = b.Y - y;
+            float x = a.X;
+            float y = a.Y;
+            float dx = b.X - x;
+            float dy = b.Y - y;
 
             if (dx != 0 || dy != 0)
             {
-                double t = ((px - x) * dx + (py - y) * dy) / (dx * dx + dy * dy);
+                float t = ((px - x) * dx + (py - y) * dy) / (dx * dx + dy * dy);
 
                 if (t > 1)
                 {

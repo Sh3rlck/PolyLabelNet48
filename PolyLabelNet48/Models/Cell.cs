@@ -9,28 +9,28 @@ namespace PolyLabelNet48.Models
     internal readonly struct Cell
     {
         /// <summary>The X coordinate of the cell center.</summary>
-        public double X { get; }
+        public float X { get; }
 
         /// <summary>The Y coordinate of the cell center.</summary>
-        public double Y { get; }
+        public float Y { get; }
 
         /// <summary>Half the cell size.</summary>
-        public double H { get; }
+        public float H { get; }
 
         /// <summary>Signed distance from the cell center to the polygon outline.</summary>
-        public double D { get; }
+        public float D { get; }
 
         /// <summary>The maximum distance to the polygon outline within the cell (used as priority).</summary>
-        public double Max { get; }
+        public float Max { get; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Cell(double x, double y, double h, double d)
+        public Cell(float x, float y, float h, float d)
         {
             X = x;
             Y = y;
             H = h;
             D = d;
-            Max = d + h * 1.4142135623730951; // d + h * sqrt(2)
+            Max = d + h * 1.4142135623730951f; // d + h * sqrt(2)
         }
     }
 

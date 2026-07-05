@@ -6,9 +6,9 @@ namespace PolyLabelNet48.Models
     public interface IPoint
     {
         /// <summary>The X coordinate.</summary>
-        double X { get; }
+        float X { get; }
 
         /// <summary>The Y coordinate.</summary>
-        double Y { get; }
+        float Y { get; }
     }
 }

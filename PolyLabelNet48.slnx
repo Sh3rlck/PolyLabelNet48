@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="PolyLabelNet48/PolyLabelNet48.csproj" Id="3ea71d08-6b90-40d2-b570-d80b3cd8e5cb" />
   <Project Path="PolyLabelNet48.Tests/PolyLabelNet48.Tests.csproj" />
+  <Project Path="WinApp/WinApp.csproj" Id="5bdb3381-3acb-4928-933e-23b64bfcb061" />
 </Solution>
