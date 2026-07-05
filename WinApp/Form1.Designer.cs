@@ -40,22 +40,22 @@
             this.panelView.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.panelView.Location = new System.Drawing.Point(0, 0);
             this.panelView.Name = "panelView";
-            this.panelView.Size = new System.Drawing.Size(689, 454);
+            this.panelView.Size = new System.Drawing.Size(827, 544);
             this.panelView.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnRun);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 454);
+            this.panel2.Location = new System.Drawing.Point(0, 544);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(689, 47);
+            this.panel2.Size = new System.Drawing.Size(827, 47);
             this.panel2.TabIndex = 1;
             // 
             // btnRun
             // 
             this.btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRun.Location = new System.Drawing.Point(602, 12);
+            this.btnRun.Location = new System.Drawing.Point(740, 12);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 0;
@@ -65,7 +65,7 @@
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(689, 501);
+            this.ClientSize = new System.Drawing.Size(827, 591);
             this.Controls.Add(this.panelView);
             this.Controls.Add(this.panel2);
             this.Name = "Form1";

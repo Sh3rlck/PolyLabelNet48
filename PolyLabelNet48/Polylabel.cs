@@ -77,7 +77,7 @@ namespace PolyLabelNet48
                 return new PolylabelResult(new Point(0, 0), 0);
             }
 
-            // 1. Find the bounding box of the outer ring
+            // Find the bounding box of the outer ring
             float minX = float.PositiveInfinity;
             float minY = float.PositiveInfinity;
             float maxX = float.NegativeInfinity;
@@ -101,19 +101,16 @@ namespace PolyLabelNet48
                 return new PolylabelResult(new Point(minX, minY), 0);
             }
 
-            // 2. Take centroid as the first best guess
+            // Take centroid as the first best guess
             Cell bestCell = GetCentroidCell<TPolygon, TPoint>(polygon);
 
-            // 3. Second guess: bounding box centroid
+            // Second guess: bounding box centroid
             Cell bboxCell = CreateCell<TPolygon, TPoint>(minX + width / 2.0f, minY + height / 2.0f, 0, polygon);
-            if (bboxCell.D > bestCell.D)
-            {
-                bestCell = bboxCell;
-            }
+            if (bboxCell.D > bestCell.D) bestCell = bboxCell;
 
             int numProbes = 2;
 
-            // 4. Cover polygon with initial cells
+            // Cover polygon with initial cells
             float initialH = cellSize / 2.0f;
             for (float x = minX; x < maxX; x += cellSize)
             {
@@ -126,13 +123,11 @@ namespace PolyLabelNet48
             // 5. Main queue processing loop
             while (cellQueue.Count > 0)
             {
+                // pick the most promising cell from the queue
                 Cell cell = cellQueue.Dequeue();
 
                 // Do not drill down further if there's no chance of a better solution
-                if (cell.Max - bestCell.D <= precision)
-                {
-                    break;
-                }
+                if (cell.Max - bestCell.D <= precision) break;
 
                 // Split the cell into four child cells
                 float h = cell.H / 2.0f;
@@ -189,6 +184,47 @@ namespace PolyLabelNet48
             return new Cell(x, y, h, d);
         }
 
+        // signed distance from point to polygon outline (negative if point is outside)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float PointToPolygonDist<TPolygon, TPoint>(float x, float y, TPolygon polygon)
+            where TPolygon : struct, IPolygon<TPoint>
+            where TPoint : struct, IPoint
+        {
+            bool inside = false;
+            float minDistSq = float.PositiveInfinity;
+
+            int ringCount = polygon.RingCount;
+            for (int r = 0; r < ringCount; r++)
+            {
+                TPoint[] ring = polygon.GetRing(r);
+                int len = ring.Length;
+                if (len == 0) continue;
+
+                TPoint b = ring[len - 1];
+                for (int i = 0; i < len; i++)
+                {
+                    TPoint a = ring[i];
+
+                    if ((a.Y > y) != (b.Y > y) &&
+                        (x < (b.X - a.X) * (y - a.Y) / (b.Y - a.Y) + a.X))
+                    {
+                        inside = !inside;
+                    }
+
+                    float distSq = GetSegDistSq(x, y, a, b);
+                    if (distSq < minDistSq)
+                    {
+                        minDistSq = distSq;
+                    }
+
+                    b = a;
+                }
+            }
+
+            return minDistSq == 0 ? 0 : (inside ? 1 : -1) * MathF.Sqrt(minDistSq);
+        }
+
+        // get polygon centroid
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Cell GetCentroidCell<TPolygon, TPoint>(TPolygon polygon)
             where TPolygon : struct, IPolygon<TPoint>
@@ -230,45 +266,7 @@ namespace PolyLabelNet48
             return centroid;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static float PointToPolygonDist<TPolygon, TPoint>(float x, float y, TPolygon polygon)
-            where TPolygon : struct, IPolygon<TPoint>
-            where TPoint : struct, IPoint
-        {
-            bool inside = false;
-            float minDistSq = float.PositiveInfinity;
-
-            int ringCount = polygon.RingCount;
-            for (int r = 0; r < ringCount; r++)
-            {
-                TPoint[] ring = polygon.GetRing(r);
-                int len = ring.Length;
-                if (len == 0) continue;
-
-                TPoint b = ring[len - 1];
-                for (int i = 0; i < len; i++)
-                {
-                    TPoint a = ring[i];
-
-                    if ((a.Y > y) != (b.Y > y) &&
-                        (x < (b.X - a.X) * (y - a.Y) / (b.Y - a.Y) + a.X))
-                    {
-                        inside = !inside;
-                    }
-
-                    float distSq = GetSegDistSq(x, y, a, b);
-                    if (distSq < minDistSq)
-                    {
-                        minDistSq = distSq;
-                    }
-
-                    b = a;
-                }
-            }
-
-            return minDistSq == 0 ? 0 : (inside ? 1 : -1) * MathF.Sqrt(minDistSq);
-        }
-
+        // get squared distance from a point to a segment
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float GetSegDistSq<TPoint>(float px, float py, in TPoint a, in TPoint b)
             where TPoint : struct, IPoint
