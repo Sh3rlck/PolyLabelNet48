@@ -87,5 +87,11 @@
       <Version>5.1.59</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PolyLabelNet48\PolyLabelNet48.csproj">
+      <Project>{3ea71d08-6b90-40d2-b570-d80b3cd8e5cb}</Project>
+      <Name>PolyLabelNet48</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

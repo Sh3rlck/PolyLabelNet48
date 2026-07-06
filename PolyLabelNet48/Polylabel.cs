@@ -110,17 +110,38 @@ namespace PolyLabelNet48
 
             int numProbes = 2;
 
+            var PotentiallyQueue = (float x, float y, float h, TPolygon polygon) =>
+            {
+                Cell cell = CreateCell<TPolygon, TPoint>(x, y, h, polygon);
+                numProbes++;
+                if (cell.Max > bestCell.D + precision)
+                {
+                    cellQueue.Enqueue(cell);
+                }
+
+                if (cell.D > bestCell.D)
+                {
+                    bestCell = cell;
+                    if (debug)
+                    {
+                        Console.WriteLine($"found best {MathF.Round(1e4f * cell.D) / 1e4} after {numProbes} probes");
+                    }
+                }
+            };
+
             // Cover polygon with initial cells
             float initialH = cellSize / 2.0f;
             for (float x = minX; x < maxX; x += cellSize)
             {
                 for (float y = minY; y < maxY; y += cellSize)
                 {
-                    PotentiallyQueue<TPolygon, TPoint, TCellQueue>(x + initialH, y + initialH, initialH, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+                    // PotentiallyQueue<TPolygon, TPoint, TCellQueue>(x + initialH, y + initialH, initialH, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+
+                    PotentiallyQueue(x + initialH, y + initialH, initialH, polygon);
                 }
             }
 
-            // 5. Main queue processing loop
+            // Main queue processing loop
             while (cellQueue.Count > 0)
             {
                 // pick the most promising cell from the queue
@@ -131,10 +152,15 @@ namespace PolyLabelNet48
 
                 // Split the cell into four child cells
                 float h = cell.H / 2.0f;
-                PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
-                PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X + h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
-                PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y + h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
-                PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X + h, cell.Y + h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+                // PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+                // PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X + h, cell.Y - h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+                // PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X - h, cell.Y + h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+                // PotentiallyQueue<TPolygon, TPoint, TCellQueue>(cell.X + h, cell.Y + h, h, polygon, ref numProbes, ref bestCell, cellQueue, precision, debug);
+
+                PotentiallyQueue(cell.X - h, cell.Y - h, h, polygon);
+                PotentiallyQueue(cell.X + h, cell.Y - h, h, polygon);
+                PotentiallyQueue(cell.X - h, cell.Y + h, h, polygon);
+                PotentiallyQueue(cell.X + h, cell.Y + h, h, polygon);
             }
 
             if (debug)
@@ -145,35 +171,35 @@ namespace PolyLabelNet48
             return new PolylabelResult(new Point(bestCell.X, bestCell.Y), bestCell.D);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void PotentiallyQueue<TPolygon, TPoint, TCellQueue>(
-            float x, float y, float h,
-            TPolygon polygon,
-            ref int numProbes,
-            ref Cell bestCell,
-            TCellQueue cellQueue,
-            float precision,
-            bool debug)
-            where TPolygon : struct, IPolygon<TPoint>
-            where TPoint : struct, IPoint
-            where TCellQueue : ICellQueue
-        {
-            Cell cell = CreateCell<TPolygon, TPoint>(x, y, h, polygon);
-            numProbes++;
-            if (cell.Max > bestCell.D + precision)
-            {
-                cellQueue.Enqueue(cell);
-            }
-
-            if (cell.D > bestCell.D)
-            {
-                bestCell = cell;
-                if (debug)
-                {
-                    Console.WriteLine($"found best {MathF.Round(1e4f * cell.D) / 1e4} after {numProbes} probes");
-                }
-            }
-        }
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // private static void PotentiallyQueue<TPolygon, TPoint, TCellQueue>(
+        //     float x, float y, float h,
+        //     TPolygon polygon,
+        //     ref int numProbes,
+        //     ref Cell bestCell,
+        //     TCellQueue cellQueue,
+        //     float precision,
+        //     bool debug)
+        //     where TPolygon : struct, IPolygon<TPoint>
+        //     where TPoint : struct, IPoint
+        //     where TCellQueue : ICellQueue
+        // {
+        //     Cell cell = CreateCell<TPolygon, TPoint>(x, y, h, polygon);
+        //     numProbes++;
+        //     if (cell.Max > bestCell.D + precision)
+        //     {
+        //         cellQueue.Enqueue(cell);
+        //     }
+        // 
+        //     if (cell.D > bestCell.D)
+        //     {
+        //         bestCell = cell;
+        //         if (debug)
+        //         {
+        //             Console.WriteLine($"found best {MathF.Round(1e4f * cell.D) / 1e4} after {numProbes} probes");
+        //         }
+        //     }
+        // }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Cell CreateCell<TPolygon, TPoint>(float x, float y, float h, TPolygon polygon)
