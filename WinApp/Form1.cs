@@ -1,9 +1,10 @@
-﻿using PolyLabelNet48;
+﻿using PolyLabelNet;
 using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -70,7 +71,7 @@ namespace WinApp
             // _formsPlot.MouseMove += _formsPlot_MouseMove;
         }
 
-        private void InitPlot(List<PolyLabelNet48.Models.Point> points, PolyLabelNet48.Models.PolylabelResult result)
+        private void InitPlot(List<PolyLabelNet.Point> points, PolyLabelNet.PolylabelResult result)
         {
             // // 在 Form1 的构造函数或 Load 事件中
             // _formsPlot = new ScottPlot.WinForms.FormsPlot() { Dock = DockStyle.Fill };
@@ -122,20 +123,29 @@ namespace WinApp
             var end = str.LastIndexOf(']');
             var tmp = str.Substring(start + 1, end - start - 1);
             var arr = tmp.Split(new[] { "][" }, StringSplitOptions.RemoveEmptyEntries);
-            var list = new List<PolyLabelNet48.Models.Point>();
+            var list = new List<PolyLabelNet.Point>();
             foreach (var s in arr)
             {
                 var arrPs = s.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 if (arrPs.Length == 2 && float.TryParse(arrPs[0], out var x) && float.TryParse(arrPs[1], out var y))
                 {
-                    list.Add(new PolyLabelNet48.Models.Point(x, y));
+                    list.Add(new PolyLabelNet.Point(x, y));
                 }
             }
 
             // var coords = list.Select(o => new Coordinates(o.X, o.Y)).ToList();
 
-            var polygon = new PolyLabelNet48.Models.Polygon(new PolyLabelNet48.Models.Point[][] { list.ToArray() });
+
+            var polygon = new PolyLabelNet.Polygon(new PolyLabelNet.Point[][] { list.ToArray() });
             var res = Polylabel.Run(polygon, 1f, true);
+
+            var sw = Stopwatch.StartNew();
+            for (int i = 0; i < 100; i++)
+            {
+                Polylabel.Run(polygon, 2f);
+            }
+            sw.Stop();
+            Console.WriteLine($"ms: {sw.ElapsedMilliseconds}");
 
             InitPlot(list, res);
         }

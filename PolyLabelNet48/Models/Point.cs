@@ -1,4 +1,4 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Represents a 2F point with double-precision coordinates.

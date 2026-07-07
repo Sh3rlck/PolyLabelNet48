@@ -1,6 +1,6 @@
 using System;
 
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Represents a generic polygon, composed of one or more linear rings of custom point types.

@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Represents a square cell of the polygon search grid, holding its center, half-size and

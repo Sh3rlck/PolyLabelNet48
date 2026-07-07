@@ -1,4 +1,4 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Defines a contract for a polygon, enabling zero-overhead generic execution over custom geometry containers.

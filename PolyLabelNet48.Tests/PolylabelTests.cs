@@ -2,10 +2,9 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Xunit;
-using PolyLabelNet48;
-using PolyLabelNet48.Models;
+using PolyLabelNet;
 
-namespace PolyLabelNet48.Tests
+namespace PolyLabelNet.Tests
 {
     public class PolylabelTests
     {

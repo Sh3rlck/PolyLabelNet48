@@ -1,4 +1,4 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Defines a contract for a 2D point, enabling zero-overhead generic execution in Polylabel.

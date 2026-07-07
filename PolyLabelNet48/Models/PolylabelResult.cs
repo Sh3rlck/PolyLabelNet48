@@ -1,4 +1,4 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Represents the result of a Polylabel calculation.

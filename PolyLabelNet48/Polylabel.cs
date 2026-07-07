@@ -4,9 +4,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using PolyLabelNet48.Models;
 
-namespace PolyLabelNet48
+namespace PolyLabelNet
 {
     /// <summary>
     /// Provides methods for finding the pole of inaccessibility of a polygon.

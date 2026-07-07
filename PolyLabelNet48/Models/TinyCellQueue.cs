@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// An <see cref="ICellQueue"/> backed by <see cref="Tinyqueue{T}"/>, ordering cells so the one
