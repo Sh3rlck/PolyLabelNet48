@@ -139,13 +139,13 @@ namespace WinApp
             var polygon = new PolyLabelNet.Polygon(new PolyLabelNet.Point[][] { list.ToArray() });
             var res = Polylabel.Run(polygon, 1f, true);
 
-            var sw = Stopwatch.StartNew();
-            for (int i = 0; i < 100; i++)
-            {
-                Polylabel.Run(polygon, 2f);
-            }
-            sw.Stop();
-            Console.WriteLine($"ms: {sw.ElapsedMilliseconds}");
+            // var sw = Stopwatch.StartNew();
+            // for (int i = 0; i < 1000; i++)
+            // {
+            //     Polylabel.Run(polygon, 2f);
+            // }
+            // sw.Stop();
+            // Console.WriteLine($"ms: {sw.ElapsedMilliseconds}");
 
             InitPlot(list, res);
         }
@@ -162,3 +162,74 @@ namespace WinApp
 
     }
 }
+
+
+/**
+float 1f times 100
+found best 165.8331 after 5 probes
+found best 169.75 after 8 probes
+found best 418.6369 after 10 probes
+found best 440.7461 after 12 probes
+found best 523.3358 after 31 probes
+found best 537.415 after 36 probes
+found best 562.3623 after 70 probes
+found best 564.3482 after 249 probes
+found best 566.212 after 312 probes
+found best 566.4835 after 396 probes
+found best 566.7512 after 771 probes
+found best 567.0314 after 844 probes
+found best 567.2218 after 1365 probes
+found best 567.4049 after 1729 probes
+found best 567.4438 after 1993 probes
+found best 567.4894 after 2682 probes
+found best 567.5277 after 3525 probes
+num probes: 3568
+best distance: 567.5277
+ms: 2306
+
+
+float 2f times 100
+found best 165.8331 after 5 probes
+found best 169.75 after 8 probes
+found best 418.6369 after 10 probes
+found best 440.7461 after 12 probes
+found best 523.3358 after 31 probes
+found best 537.415 after 36 probes
+found best 562.3623 after 70 probes
+found best 564.3482 after 249 probes
+found best 566.212 after 312 probes
+found best 566.4835 after 396 probes
+found best 566.7512 after 771 probes
+found best 567.0314 after 844 probes
+found best 567.2218 after 1365 probes
+found best 567.4049 after 1729 probes
+found best 567.4438 after 1993 probes
+found best 567.4894 after 2682 probes
+found best 567.5277 after 3525 probes
+num probes: 3568
+best distance: 567.5277
+ms: 1670
+
+
+found best 165.8331 after 5 probes
+found best 169.75 after 8 probes
+found best 418.6369 after 10 probes
+found best 440.7461 after 12 probes
+found best 523.3358 after 31 probes
+found best 537.415 after 36 probes
+found best 562.3623 after 70 probes
+found best 564.3482 after 249 probes
+found best 566.212 after 312 probes
+found best 566.4835 after 396 probes
+found best 566.7512 after 771 probes
+found best 567.0314 after 844 probes
+found best 567.2218 after 1365 probes
+found best 567.4049 after 1729 probes
+found best 567.4438 after 1993 probes
+found best 567.4894 after 2682 probes
+found best 567.5277 after 3525 probes
+num probes: 3568
+best distance: 567.5277
+ms: 257
+
+**/
