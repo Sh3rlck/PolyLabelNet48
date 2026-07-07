@@ -135,7 +135,7 @@ namespace WinApp
             // var coords = list.Select(o => new Coordinates(o.X, o.Y)).ToList();
 
             var polygon = new PolyLabelNet48.Models.Polygon(new PolyLabelNet48.Models.Point[][] { list.ToArray() });
-            var res = Polylabel.Run(polygon);
+            var res = Polylabel.Run(polygon, 1f, true);
 
             InitPlot(list, res);
         }
