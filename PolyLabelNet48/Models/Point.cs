@@ -1,18 +1,18 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
-    /// Represents a 2D point with double-precision coordinates.
+    /// Represents a 2F point with double-precision coordinates.
     /// </summary>
     public readonly struct Point : IPoint
     {
         /// <summary>The X coordinate.</summary>
-        public double X { get; }
+        public float X { get; }
 
         /// <summary>The Y coordinate.</summary>
-        public double Y { get; }
+        public float Y { get; }
 
         /// <summary>Creates a new point with the specified coordinates.</summary>
-        public Point(double x, double y)
+        public Point(float x, float y)
         {
             X = x;
             Y = y;

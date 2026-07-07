@@ -1,4 +1,4 @@
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Defines a contract for a 2D point, enabling zero-overhead generic execution in Polylabel.
@@ -6,9 +6,9 @@ namespace PolyLabelNet48.Models
     public interface IPoint
     {
         /// <summary>The X coordinate.</summary>
-        double X { get; }
+        float X { get; }
 
         /// <summary>The Y coordinate.</summary>
-        double Y { get; }
+        float Y { get; }
     }
 }

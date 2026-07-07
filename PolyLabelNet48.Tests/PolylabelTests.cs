@@ -2,10 +2,9 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Xunit;
-using PolyLabelNet48;
-using PolyLabelNet48.Models;
+using PolyLabelNet;
 
-namespace PolyLabelNet48.Tests
+namespace PolyLabelNet.Tests
 {
     public class PolylabelTests
     {
@@ -13,7 +12,7 @@ namespace PolyLabelNet48.Tests
         {
             string fullPath = Path.Combine(AppContext.BaseDirectory, "fixtures", filename);
             string json = File.ReadAllText(fullPath);
-            double[][][] coords = JsonSerializer.Deserialize<double[][][]>(json)
+            float[][][] coords = JsonSerializer.Deserialize<float[][][]>(json)
                 ?? throw new Exception($"Failed to deserialize {filename}");
             return new Polygon(coords);
         }
@@ -22,7 +21,7 @@ namespace PolyLabelNet48.Tests
         public void FindsPoleOfInaccessibilityForWater1AndPrecision1()
         {
             var water1 = LoadFixture("water1.json");
-            var (point, distance) = Polylabel.Run(water1, 1.0);
+            var (point, distance) = Polylabel.Run(water1, 1.0f);
 
             Assert.Equal(3865.85009765625, point.X);
             Assert.Equal(2124.87841796875, point.Y);
@@ -33,7 +32,7 @@ namespace PolyLabelNet48.Tests
         public void FindsPoleOfInaccessibilityForWater1AndPrecision50()
         {
             var water1 = LoadFixture("water1.json");
-            var (point, distance) = Polylabel.Run(water1, 50.0);
+            var (point, distance) = Polylabel.Run(water1, 50.0f);
 
             Assert.Equal(3854.296875, point.X);
             Assert.Equal(2123.828125, point.Y);
@@ -44,7 +43,7 @@ namespace PolyLabelNet48.Tests
         public void FindsPoleOfInaccessibilityForWater2AndDefaultPrecision1()
         {
             var water2 = LoadFixture("water2.json");
-            var (point, distance) = Polylabel.Run(water2, 1.0);
+            var (point, distance) = Polylabel.Run(water2, 1.0f);
 
             Assert.Equal(3263.5, point.X);
             Assert.Equal(3263.5, point.Y);
@@ -54,7 +53,7 @@ namespace PolyLabelNet48.Tests
         [Fact]
         public void WorksOnDegeneratePolygons()
         {
-            var p1Coords = new double[][][] { new double[][] { new double[] { 0, 0 }, new double[] { 1, 0 }, new double[] { 2, 0 }, new double[] { 0, 0 } } };
+            var p1Coords = new float[][][] { new float[][] { new float[] { 0, 0 }, new float[] { 1, 0 }, new float[] { 2, 0 }, new float[] { 0, 0 } } };
             var polygon1 = new Polygon(p1Coords);
             var (point1, distance1) = Polylabel.Run(polygon1);
 
@@ -62,7 +61,7 @@ namespace PolyLabelNet48.Tests
             Assert.Equal(0, point1.Y);
             Assert.Equal(0, distance1);
 
-            var p2Coords = new double[][][] { new double[][] { new double[] { 0, 0 }, new double[] { 1, 0 }, new double[] { 1, 1 }, new double[] { 1, 0 }, new double[] { 0, 0 } } };
+            var p2Coords = new float[][][] { new float[][] { new float[] { 0, 0 }, new float[] { 1, 0 }, new float[] { 1, 1 }, new float[] { 1, 0 }, new float[] { 0, 0 } } };
             var polygon2 = new Polygon(p2Coords);
             var (point2, distance2) = Polylabel.Run(polygon2);
 
@@ -118,7 +117,7 @@ namespace PolyLabelNet48.Tests
         [Fact]
         public void ReturnsZeroForSinglePointPolygon()
         {
-            var coords = new double[][][] { new double[][] { new double[] { 5, 7 } } };
+            var coords = new float[][][] { new float[][] { new float[] { 5, 7 } } };
             var polygon = new Polygon(coords);
             var (point, distance) = Polylabel.Run(polygon);
 
@@ -129,13 +128,13 @@ namespace PolyLabelNet48.Tests
 
         private readonly struct CustomVector2 : IPoint
         {
-            public double X => XCoord;
-            public double Y => YCoord;
+            public float X => XCoord;
+            public float Y => YCoord;
 
-            public double XCoord { get; }
-            public double YCoord { get; }
+            public float XCoord { get; }
+            public float YCoord { get; }
 
-            public CustomVector2(double x, double y)
+            public CustomVector2(float x, float y)
             {
                 XCoord = x;
                 YCoord = y;
@@ -158,7 +157,7 @@ namespace PolyLabelNet48.Tests
             };
 
             var polygon = new Polygon<CustomVector2>(rings);
-            var (point, distance) = Polylabel.Run(polygon, 1.0);
+            var (point, distance) = Polylabel.Run(polygon, 1.0f);
 
             Assert.Equal(5.0, point.X);
             Assert.Equal(5.0, point.Y);
@@ -169,8 +168,8 @@ namespace PolyLabelNet48.Tests
         {
             private readonly System.Numerics.Vector2 _vector;
 
-            public double X => _vector.X;
-            public double Y => _vector.Y;
+            public float X => _vector.X;
+            public float Y => _vector.Y;
 
             public Vector2Adapter(System.Numerics.Vector2 vector) => _vector = vector;
         }
@@ -194,7 +193,7 @@ namespace PolyLabelNet48.Tests
                 ring => Array.ConvertAll(ring, v => new Vector2Adapter(v)));
 
             var polygon = new Polygon<Vector2Adapter>(wrappedRings);
-            var (point, distance) = Polylabel.Run(polygon, 1.0);
+            var (point, distance) = Polylabel.Run(polygon, 1.0f);
 
             Assert.Equal(5.0, point.X);
             Assert.Equal(5.0, point.Y);
@@ -225,7 +224,7 @@ namespace PolyLabelNet48.Tests
             };
 
             var polygon = new CustomPolygon(outerRing);
-            var (point, distance) = Polylabel.Run<CustomPolygon, Point>(polygon, 1.0);
+            var (point, distance) = Polylabel.Run<CustomPolygon, Point>(polygon, 1.0f);
 
             Assert.Equal(5.0, point.X);
             Assert.Equal(5.0, point.Y);

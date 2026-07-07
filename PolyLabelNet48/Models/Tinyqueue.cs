@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// A minimal binary-heap priority queue, ported from the JavaScript "tinyqueue" used by the

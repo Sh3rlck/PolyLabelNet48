@@ -1,6 +1,6 @@
 using System;
 
-namespace PolyLabelNet48.Models
+namespace PolyLabelNet
 {
     /// <summary>
     /// Represents a generic polygon, composed of one or more linear rings of custom point types.
@@ -39,8 +39,8 @@ namespace PolyLabelNet48.Models
         /// <summary>Creates a new polygon from the specified rings.</summary>
         public Polygon(Point[][] rings) => Rings = rings ?? throw new ArgumentNullException(nameof(rings));
 
-        /// <summary>Creates a new polygon from GeoJSON-style double coordinates.</summary>
-        public Polygon(double[][][] coordinates)
+        /// <summary>Creates a new polygon from GeoJSON-style float coordinates.</summary>
+        public Polygon(float[][][] coordinates)
         {
             if (coordinates == null) throw new ArgumentNullException(nameof(coordinates));
 
